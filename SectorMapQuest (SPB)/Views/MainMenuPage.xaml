@@ -3,20 +3,83 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="SectorMapQuest__SPB_.Views.MainMenuPage"
-    Title="Главное меню">
+    BackgroundColor="#1E1E1E">
 
-    <VerticalStackLayout
-        Padding="30"
-        Spacing="20">
+    <Grid RowDefinitions="Auto,*,Auto">
 
-        <Label
-            Text="Sector Map Quest"
-            FontSize="28"
-            HorizontalOptions="Center" />
+        <!-- Верхняя панель -->
+        <Grid Grid.Row="0" Padding="10">
+            <Button
+                Text="⚙"
+                FontSize="22"
+                HorizontalOptions="End"
+                BackgroundColor="Transparent"
+                TextColor="White"
+                Clicked="OnSettingsClicked"/>
+        </Grid>
 
-        <Button
-            Text="Открыть карту"
-            Clicked="OnOpenMapClicked" />
+        <!-- Центральная зона (карта) -->
+        <Grid Grid.Row="1">
+            <Label
+                Text="There will be a map with sectors here"
+                TextColor="White"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                FontSize="20" />
+        </Grid>
 
-    </VerticalStackLayout>
+        <!-- Нижняя панель -->
+        <Grid Grid.Row="2"
+      ColumnDefinitions="*,*,*,*"
+      Padding="10"
+      BackgroundColor="#1E1E1E">
+
+            <!-- MAP -->
+            <VerticalStackLayout Grid.Column="0"
+                         HorizontalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnMapClicked"/>
+                </VerticalStackLayout.GestureRecognizers>
+
+                <Label Text="🗺" FontSize="22" HorizontalTextAlignment="Center"/>
+                <Label Text="Map" FontSize="16" TextColor="White"/>
+            </VerticalStackLayout>
+
+            <!-- STATS -->
+            <VerticalStackLayout Grid.Column="1"
+                         HorizontalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnStatsClicked"/>
+                </VerticalStackLayout.GestureRecognizers>
+
+                <Label Text="📊" FontSize="22" HorizontalTextAlignment="Center"/>
+                <Label Text="Statistics" FontSize="16" TextColor="White"/>
+            </VerticalStackLayout>
+
+            <!-- FEED -->
+            <VerticalStackLayout Grid.Column="2"
+                         HorizontalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnFeedClicked"/>
+                </VerticalStackLayout.GestureRecognizers>
+
+                <Label Text="📰" FontSize="22" HorizontalTextAlignment="Center"/>
+                <Label Text="Feed" FontSize="16" TextColor="White"/>
+            </VerticalStackLayout>
+
+            <!-- PROFILE -->
+            <VerticalStackLayout Grid.Column="3"
+                         HorizontalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnProfileClicked"/>
+                </VerticalStackLayout.GestureRecognizers>
+
+                <Label Text="👤" FontSize="26" HorizontalTextAlignment="Center"/>
+                <Label Text="Profile" FontSize="16" TextColor="White"/>
+            </VerticalStackLayout>
+
+        </Grid>
+
+
+    </Grid>
 </ContentPage>

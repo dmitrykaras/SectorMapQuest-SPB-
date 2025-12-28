@@ -7,8 +7,28 @@ public partial class MainMenuPage : ContentPage
         InitializeComponent();
     }
 
-    private async void OnOpenMapClicked(object sender, EventArgs e)
+    private async void OnMapClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new MapPage());
+        await DisplayAlert("OK", "Map clicked", "OK");
+    }
+
+    private async void OnStatsClicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("OK", "Statistics clicked", "OK");
+    }
+
+    private async void OnFeedClicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("OK", "Feed clicked", "OK");
+    }
+
+    private async void OnProfileClicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("OK", "Profile clicked", "OK");
+    }
+
+    private async void OnSettingsClicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("OK", "Settings clicked", "OK");
     }
 }

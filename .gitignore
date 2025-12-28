@@ -52,4 +52,5 @@ project.fragment.lock.json
 Thumbs.db
 .DS_Store
 
-.docx
+*.docx
+*.sln

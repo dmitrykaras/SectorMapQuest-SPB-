@@ -9,22 +9,22 @@ public partial class MainMenuPage : ContentPage
 
     private async void OnMapClicked(object sender, EventArgs e)
     {
-        await DisplayAlert("OK", "Map clicked", "OK");
+        await Navigation.PushAsync(new MapPage());
     }
 
     private async void OnStatsClicked(object sender, EventArgs e)
     {
-        await DisplayAlert("OK", "Statistics clicked", "OK");
+        await Navigation.PushAsync(new StatsPage());
     }
 
     private async void OnFeedClicked(object sender, EventArgs e)
     {
-        await DisplayAlert("OK", "Feed clicked", "OK");
+        await Navigation.PushAsync(new FeedPage());
     }
 
     private async void OnProfileClicked(object sender, EventArgs e)
     {
-        await DisplayAlert("OK", "Profile clicked", "OK");
+        await Navigation.PushAsync(new ProfilePage());
     }
 
     private async void OnSettingsClicked(object sender, EventArgs e)

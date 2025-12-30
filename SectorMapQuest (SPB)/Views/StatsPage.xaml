@@ -1,0 +1,12 @@
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="SectorMapQuest__SPB_.Views.StatsPage"
+    BackgroundColor="#1E1E1E">
+
+    <Label
+        Text="Statistics page"
+        TextColor="White"
+        HorizontalOptions="Center"
+        VerticalOptions="Center" />
+</ContentPage>

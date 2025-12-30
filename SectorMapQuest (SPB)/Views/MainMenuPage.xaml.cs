@@ -1,3 +1,5 @@
+using Microsoft.Maui.Controls;
+
 namespace SectorMapQuest__SPB_.Views;
 
 public partial class MainMenuPage : ContentPage
@@ -7,28 +9,42 @@ public partial class MainMenuPage : ContentPage
         InitializeComponent();
     }
 
-    private async void OnMapClicked(object sender, EventArgs e)
+    void OnMapTapped(object sender, TappedEventArgs e)
     {
-        await Navigation.PushAsync(new MapPage());
+        Activate(MapText);
+        PageHost.Content = new MapPage().Content;
     }
 
-    private async void OnStatsClicked(object sender, EventArgs e)
+    void OnFeedTapped(object sender, TappedEventArgs e)
     {
-        await Navigation.PushAsync(new StatsPage());
+        Activate(FeedText);
+        PageHost.Content = new FeedPage().Content;
     }
 
-    private async void OnFeedClicked(object sender, EventArgs e)
+    void OnStatsTapped(object sender, TappedEventArgs e)
     {
-        await Navigation.PushAsync(new FeedPage());
+        Activate(StatsText);
+        PageHost.Content = new StatsPage().Content;
     }
 
-    private async void OnProfileClicked(object sender, EventArgs e)
+    void OnProfileTapped(object sender, TappedEventArgs e)
     {
-        await Navigation.PushAsync(new ProfilePage());
+        Activate(ProfileText);
+        PageHost.Content = new ProfilePage().Content;
     }
 
-    private async void OnSettingsClicked(object sender, EventArgs e)
+    void Activate(Label active)
     {
-        await DisplayAlert("OK", "Settings clicked", "OK");
+        MapText.TextColor = Colors.Gray;
+        FeedText.TextColor = Colors.Gray;
+        StatsText.TextColor = Colors.Gray;
+        ProfileText.TextColor = Colors.Gray;
+
+        active.TextColor = Colors.White;
+    }
+
+    private void OnSettingsClicked(object sender, TappedEventArgs e)
+    {
+        Navigation.PushAsync(new SettingsPage());
     }
 }

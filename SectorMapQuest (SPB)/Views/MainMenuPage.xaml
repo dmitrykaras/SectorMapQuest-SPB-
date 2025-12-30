@@ -3,83 +3,84 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="SectorMapQuest__SPB_.Views.MainMenuPage"
-    BackgroundColor="#1E1E1E">
+    BackgroundColor="#121212"
+    NavigationPage.HasNavigationBar="False">
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <!-- Верхняя панель -->
-        <Grid Grid.Row="0" Padding="10">
-            <Button
-                Text="⚙"
-                FontSize="22"
-                HorizontalOptions="End"
-                BackgroundColor="Transparent"
-                TextColor="White"
-                Clicked="OnSettingsClicked"/>
-        </Grid>
+        <!-- ===== TOP BAR ===== -->
+        <Grid>
 
-        <!-- Центральная зона (карта) -->
-        <Grid Grid.Row="1">
+            <!-- КНОПКА НАСТРОЕК -->
             <Label
-                Text="There will be a map with sectors here"
+                Text="⚙"
+                FontSize="24"
                 TextColor="White"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                FontSize="20" />
-        </Grid>
+                HorizontalOptions="End"
+                VerticalOptions="Start"
+                Margin="16">        
 
-        <!-- Нижняя панель -->
-        <Grid Grid.Row="2"
-      ColumnDefinitions="*,*,*,*"
-      Padding="10"
-      BackgroundColor="#1E1E1E">
-
-            <!-- MAP -->
-            <VerticalStackLayout Grid.Column="0"
-                         HorizontalOptions="Center">
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnMapClicked"/>
-                </VerticalStackLayout.GestureRecognizers>
-
-                <Label Text="🗺" FontSize="22" HorizontalTextAlignment="Center"/>
-                <Label Text="Map" FontSize="16" TextColor="White"/>
-            </VerticalStackLayout>
-
-            <!-- STATS -->
-            <VerticalStackLayout Grid.Column="1"
-                         HorizontalOptions="Center">
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnStatsClicked"/>
-                </VerticalStackLayout.GestureRecognizers>
-
-                <Label Text="📊" FontSize="22" HorizontalTextAlignment="Center"/>
-                <Label Text="Statistics" FontSize="16" TextColor="White"/>
-            </VerticalStackLayout>
-
-            <!-- FEED -->
-            <VerticalStackLayout Grid.Column="2"
-                         HorizontalOptions="Center">
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnFeedClicked"/>
-                </VerticalStackLayout.GestureRecognizers>
-
-                <Label Text="📰" FontSize="22" HorizontalTextAlignment="Center"/>
-                <Label Text="Feed" FontSize="16" TextColor="White"/>
-            </VerticalStackLayout>
-
-            <!-- PROFILE -->
-            <VerticalStackLayout Grid.Column="3"
-                         HorizontalOptions="Center">
-                <VerticalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnProfileClicked"/>
-                </VerticalStackLayout.GestureRecognizers>
-
-                <Label Text="👤" FontSize="26" HorizontalTextAlignment="Center"/>
-                <Label Text="Profile" FontSize="16" TextColor="White"/>
-            </VerticalStackLayout>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSettingsClicked" />
+                </Label.GestureRecognizers>
+            </Label>
 
         </Grid>
 
+
+        <!-- ===== CONTENT ===== -->
+        <ContentView Grid.Row="1" x:Name="PageHost" />
+
+        <!-- ===== BOTTOM BAR ===== -->
+        <Border Grid.Row="2"
+                BackgroundColor="#1F1F1F"
+                StrokeThickness="0"
+                Padding="10"
+                StrokeShape="RoundRectangle 24">
+
+            <Grid ColumnDefinitions="*,*,*,*">
+
+                <VerticalStackLayout Grid.Column="0" Spacing="4" HorizontalOptions="Center">
+
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMapTapped" />
+                    </VerticalStackLayout.GestureRecognizers>
+
+                    <Label x:Name="MapText"
+                           Text="🗺"
+                           FontSize="22"
+                           HorizontalTextAlignment="Center" />
+                    <Label Text="Map"
+                           FontSize="12"
+                           TextColor="Gray" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="4" HorizontalOptions="Center">
+                    <Label x:Name="FeedIcon" Text="📰" FontSize="22"/>
+                    <Label x:Name="FeedText" Text="Feed" FontSize="12" TextColor="Gray"/>
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFeedTapped"/>
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="Center">
+                    <Label x:Name="StatsIcon" Text="📊" FontSize="22"/>
+                    <Label x:Name="StatsText" Text="Stats" FontSize="12" TextColor="Gray"/>
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStatsTapped"/>
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="3" Spacing="4" HorizontalOptions="Center">
+                    <Label x:Name="ProfileIcon" Text="👤" FontSize="22"/>
+                    <Label x:Name="ProfileText" Text="Profile" FontSize="12" TextColor="Gray"/>
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProfileTapped"/>
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
+
+            </Grid>
+        </Border>
 
     </Grid>
 </ContentPage>

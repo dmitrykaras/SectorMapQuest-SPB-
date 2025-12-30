@@ -1,0 +1,16 @@
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="SectorMapQuest__SPB_.Views.Controls.BottomBarView">
+
+    <Grid ColumnDefinitions="*,*,*,*"
+          BackgroundColor="#252525"
+          Padding="10">
+
+        <Button Text="Feed" Grid.Column="0" Clicked="OnFeedClicked"/>
+        <Button Text="Map" Grid.Column="1" Clicked="OnMapClicked"/>
+        <Button Text="Stats" Grid.Column="2" Clicked="OnStatsClicked"/>
+        <Button Text="Profile" Grid.Column="3" Clicked="OnProfileClicked"/>
+
+    </Grid>
+</ContentView>

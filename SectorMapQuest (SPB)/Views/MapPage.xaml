@@ -2,11 +2,15 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:SectorMapQuest__SPB_.Views.Controls"
     x:Class="SectorMapQuest__SPB_.Views.MapPage"
-    Title="Карта">
+    BackgroundColor="#121212">
 
-    <Label
-        Text="Здесь будет карта с секторами"
-        HorizontalOptions="Center"
-        VerticalOptions="Center" />
+    <Grid>
+        <Label
+            Text="Map page"
+            TextColor="White"
+            HorizontalOptions="Center"
+            VerticalOptions="Center" />
+    </Grid>
 </ContentPage>

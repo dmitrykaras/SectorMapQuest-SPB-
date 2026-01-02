@@ -1,18 +1,36 @@
 using Microsoft.Maui.Controls;
+using SectorMapQuest.Managers;
+using SectorMapQuest.Views;
 
 namespace SectorMapQuest__SPB_.Views;
 
 public partial class MainMenuPage : ContentPage
 {
-    public MainMenuPage()
+    private readonly MapManager _mapManager;
+    private readonly ProgressManager _progressManager;
+    private readonly PlayerPositionManager _playerPosition;
+
+    public MainMenuPage(
+            MapManager mapManager,
+            ProgressManager progressManager,
+            PlayerPositionManager playerPosition)
     {
         InitializeComponent();
+
+        _mapManager = mapManager;
+        _progressManager = progressManager;
+        _playerPosition = playerPosition;
     }
 
-    void OnMapTapped(object sender, TappedEventArgs e)
+    private async void OnStartClicked(object sender, EventArgs e)
     {
-        Activate(MapText);
-        PageHost.Content = new MapPage().Content;
+        await Navigation.PushAsync(
+            new MapPage(
+                _mapManager,
+                _progressManager,
+                _playerPosition
+            )
+        );
     }
 
     void OnFeedTapped(object sender, TappedEventArgs e)

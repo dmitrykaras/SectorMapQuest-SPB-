@@ -43,7 +43,7 @@
                 <VerticalStackLayout Grid.Column="0" Spacing="4" HorizontalOptions="Center">
 
                     <VerticalStackLayout.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnMapTapped" />
+                        <TapGestureRecognizer Tapped="OnStartClicked" />
                     </VerticalStackLayout.GestureRecognizers>
 
                     <Label x:Name="MapText"

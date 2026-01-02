@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
+    x:Class="SectorMapQuest.Views.MapPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:SectorMapQuest__SPB_.Views.Controls"
-    x:Class="SectorMapQuest__SPB_.Views.MapPage"
-    BackgroundColor="#121212">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Grid>
-        <Label
-            Text="Map page"
-            TextColor="White"
-            HorizontalOptions="Center"
-            VerticalOptions="Center" />
-    </Grid>
+    <GraphicsView
+        x:Name="MapView"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill" />
 </ContentPage>

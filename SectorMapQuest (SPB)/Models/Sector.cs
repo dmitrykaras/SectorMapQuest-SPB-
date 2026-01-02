@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SectorMapQuest__SPB_.Models
+﻿public class Sector
 {
-    internal class Sector
-    {
-    }
+    public int Id { get; set; }
+
+    // координаты логической сетки
+    public int Q { get; set; }
+    public int R { get; set; }
+
+    public bool IsOpened { get; set; }
+
+    public List<PointOfInterest> Points { get; set; } = new();
 }

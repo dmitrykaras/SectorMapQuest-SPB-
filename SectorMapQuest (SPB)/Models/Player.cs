@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SectorMapQuest__SPB_.Models
+﻿public class Player
 {
-    internal class Player
-    {
-    }
+    public int Score { get; set; }
 }

@@ -67,8 +67,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\MapPage.xaml.cs">
-	    <DependentUpon>MapPage.xaml</DependentUpon>
+	  <Compile Update="Views\MainPage.xaml.cs">
+	    <DependentUpon>MainPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
@@ -79,10 +79,10 @@
 	  <MauiXaml Update="Views\FeedPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\MainMenuPage.xaml">
+	  <MauiXaml Update="Views\MainPageMainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\MapPage.xaml">
+	  <MauiXaml Update="Views\MapView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ProfilePage.xaml">

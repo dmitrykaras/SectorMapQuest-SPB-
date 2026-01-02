@@ -1,4 +1,4 @@
-﻿using SectorMapQuest__SPB_.Views;
+﻿using SectorMapQuest.Views;
 using SectorMapQuest.Managers;
 
 
@@ -18,12 +18,10 @@ public partial class App : Application
         ProgressManager = new ProgressManager();
         PlayerPositionManager = new PlayerPositionManager();
 
-        MainPage = new NavigationPage(
-            new MainMenuPage(
-                MapManager,
-                ProgressManager,
-                PlayerPositionManager
-            )
+        MainPage = new MainPage(
+            MapManager,
+            ProgressManager,
+            PlayerPositionManager
         );
     }
 }

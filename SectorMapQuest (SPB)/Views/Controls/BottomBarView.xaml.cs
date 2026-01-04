@@ -2,6 +2,7 @@ namespace SectorMapQuest__SPB_.Views.Controls;
 
 public partial class BottomBarView : ContentView
 {
+    //события для обработки нажатий на кнопки нижней панели
     public event Action FeedClicked;
     public event Action MapClicked;
     public event Action StatsClicked;
@@ -12,6 +13,7 @@ public partial class BottomBarView : ContentView
         InitializeComponent();
     }
 
+    //обработчики нажатий на кнопки, которые вызывают соответсвующие события
     void OnFeedClicked(object sender, EventArgs e) => FeedClicked?.Invoke();
     void OnMapClicked(object sender, EventArgs e) => MapClicked?.Invoke();
     void OnStatsClicked(object sender, EventArgs e) => StatsClicked?.Invoke();

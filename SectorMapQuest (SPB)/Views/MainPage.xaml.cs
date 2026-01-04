@@ -20,10 +20,11 @@ public partial class MainPage : ContentPage
         _progressManager = progressManager;
         _playerPositionManager = playerPositionManager;
 
-        ShowMap();
+        ShowMap(); //при старте показываем карту
     }
 
-    void OnStartClicked(object sender, TappedEventArgs e)
+    //обработчики события нажатий на кпоки в нижней панели
+    void OnMapClicked(object sender, TappedEventArgs e)
     {
         ShowMap();
     }
@@ -43,6 +44,12 @@ public partial class MainPage : ContentPage
         PageHost.Content = new Label { Text = "Profile", TextColor = Colors.White };
     }
 
+    private void OnSettingsClicked(object sender, TappedEventArgs e)
+    {
+        PageHost.Content = new SettingsPage().Content;
+    }
+
+    //показывает карту в основном контейнере страницы
     private void ShowMap()
     {
         PageHost.Content = new MapView(
@@ -50,10 +57,5 @@ public partial class MainPage : ContentPage
             _progressManager,
             _playerPositionManager
         );
-    }
-
-    private void OnSettingsClicked(object sender, TappedEventArgs e)
-    {
-        PageHost.Content = new SettingsPage().Content;
     }
 }

@@ -1,6 +1,7 @@
-using SectorMapQuest.Views.Map;
+п»їusing SectorMapQuest.Views.Map;
 using SectorMapQuest.Managers;
 using SectorMapQuest__SPB_.Views;
+using SectorMapQuest.Views.Settings;
 
 namespace SectorMapQuest.Views;
 
@@ -20,10 +21,10 @@ public partial class MainPage : ContentPage
         _progressManager = progressManager;
         _playerPositionManager = playerPositionManager;
 
-        ShowMap(); //при старте показываем карту
+        ShowMap(); //РїСЂРё СЃС‚Р°СЂС‚Рµ РїРѕРєР°Р·С‹РІР°РµРј РєР°СЂС‚Сѓ
     }
 
-    //обработчики события нажатий на кпоки в нижней панели
+    //РѕР±СЂР°Р±РѕС‚С‡РёРєРё СЃРѕР±С‹С‚РёСЏ РЅР°Р¶Р°С‚РёР№ РЅР° РєРїРѕРєРё РІ РЅРёР¶РЅРµР№ РїР°РЅРµР»Рё
     void OnMapClicked(object sender, TappedEventArgs e)
     {
         ShowMap();
@@ -46,10 +47,17 @@ public partial class MainPage : ContentPage
 
     private void OnSettingsClicked(object sender, TappedEventArgs e)
     {
-        PageHost.Content = new SettingsPage().Content;
+        var settings = new SettingsView();
+        settings.BackRequested += ShowMap;
+
+        PageHost.Content = settings;
+
+        BottomBar.IsVisible = false; // в¬… СЃРєСЂС‹РІР°РµРј РЅРёР¶РЅСЋСЋ РїР°РЅРµР»СЊ
+        BackButton.IsVisible = true;
     }
 
-    //показывает карту в основном контейнере страницы
+
+    //РїРѕРєР°Р·С‹РІР°РµС‚ РєР°СЂС‚Сѓ РІ РѕСЃРЅРѕРІРЅРѕРј РєРѕРЅС‚РµР№РЅРµСЂРµ СЃС‚СЂР°РЅРёС†С‹
     private void ShowMap()
     {
         PageHost.Content = new MapView(
@@ -57,5 +65,18 @@ public partial class MainPage : ContentPage
             _progressManager,
             _playerPositionManager
         );
+
+        BottomBar.IsVisible = true; // в¬… РІРѕР·РІСЂР°С‰Р°РµРј РЅРёР¶РЅСЋСЋ РїР°РЅРµР»СЊ
+    }
+
+
+    //Р·Р°РєСЂС‹С‚СЊ РІСЃРїР»С‹РІР°СЋС‰РµРµ РѕРєРЅРѕ
+    private void OnPopupClosed(object sender, EventArgs e) { SectorPopup.IsVisible = false; }
+
+    private void OnBackClicked(object sender, TappedEventArgs e)
+    {
+        BackButton.IsVisible = false;
+        BottomBar.IsVisible = true;
+        ShowMap();
     }
 }

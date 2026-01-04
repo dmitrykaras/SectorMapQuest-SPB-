@@ -8,31 +8,77 @@
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <!-- ===== TOP BAR ===== -->
-        <Grid>
+        <!-- ================= TOP BAR ================= -->
+        <Grid Grid.Row="0"
+              Padding="16"
+              ColumnDefinitions="Auto,*,Auto">
 
-            <!-- КНОПКА НАСТРОЕК -->
-            <Label
-                Text="⚙"
-                FontSize="24"
-                TextColor="White"
-                HorizontalOptions="End"
-                VerticalOptions="Start"
-                Margin="16">        
+            <!-- BACK (СДВИНУТА ВВЕРХ) -->
+            <Grid Margin="0,0,0,0">
+                <Label x:Name="BackButton"
+                       Text="←"
+                       FontSize="28"
+                       TextColor="White"
+                       IsVisible="False">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
 
+            <!-- TITLE -->
+            <Label Grid.Column="1"
+                   Text="SectorMapQuest"
+                   FontSize="18"
+                   TextColor="White"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"/>
+
+            <!-- SETTINGS -->
+            <Label Grid.Column="2"
+                   Text="⚙"
+                   FontSize="24"
+                   TextColor="White"
+                   VerticalOptions="Center">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnSettingsClicked" />
+                    <TapGestureRecognizer Tapped="OnSettingsClicked"/>
                 </Label.GestureRecognizers>
             </Label>
 
         </Grid>
 
+        <!-- ================= CONTENT + POPUP ================= -->
+        <Grid Grid.Row="1">
 
-        <!-- ===== CONTENT ===== -->
-        <ContentView Grid.Row="1" x:Name="PageHost" />
+            <!-- Контент страниц -->
+            <ContentView x:Name="PageHost"/>
 
-        <!-- ===== BOTTOM BAR ===== -->
+            <!-- POPUP -->
+            <Frame x:Name="SectorPopup"
+                   IsVisible="False"
+                   BackgroundColor="#AA000000"
+                   Padding="20"
+                   CornerRadius="16"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Новый сектор открыт!"
+                           FontSize="20"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+
+                    <Button Text="Продолжить"
+                            Clicked="OnPopupClosed"/>
+                </VerticalStackLayout>
+
+            </Frame>
+
+        </Grid>
+
+        <!-- ================= BOTTOM BAR ================= -->
         <Border Grid.Row="2"
+                x:Name="BottomBar"
                 BackgroundColor="#1F1F1F"
                 StrokeThickness="0"
                 Padding="10"
@@ -40,43 +86,36 @@
 
             <Grid ColumnDefinitions="*,*,*,*">
 
-                <VerticalStackLayout Grid.Column="0" Spacing="4" HorizontalOptions="Center">
-
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                     <VerticalStackLayout.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnStartClicked" />
+                        <TapGestureRecognizer Tapped="OnMapClicked"/>
                     </VerticalStackLayout.GestureRecognizers>
-
-                    <Label x:Name="MapText"
-                           Text="🗺"
-                           FontSize="22"
-                           HorizontalTextAlignment="Center" />
-                    <Label Text="Map"
-                           FontSize="12"
-                           TextColor="Gray" />
+                    <Label Text="🗺" FontSize="22"/>
+                    <Label Text="Map" FontSize="12" TextColor="Gray"/>
                 </VerticalStackLayout>
 
-                <VerticalStackLayout Grid.Column="1" Spacing="4" HorizontalOptions="Center">
-                    <Label x:Name="FeedIcon" Text="📰" FontSize="22"/>
-                    <Label x:Name="FeedText" Text="Feed" FontSize="12" TextColor="Gray"/>
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
                     <VerticalStackLayout.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnFeedTapped"/>
                     </VerticalStackLayout.GestureRecognizers>
+                    <Label Text="📰" FontSize="22"/>
+                    <Label Text="Feed" FontSize="12" TextColor="Gray"/>
                 </VerticalStackLayout>
 
-                <VerticalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="Center">
-                    <Label x:Name="StatsIcon" Text="📊" FontSize="22"/>
-                    <Label x:Name="StatsText" Text="Stats" FontSize="12" TextColor="Gray"/>
+                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
                     <VerticalStackLayout.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnStatsTapped"/>
                     </VerticalStackLayout.GestureRecognizers>
+                    <Label Text="📊" FontSize="22"/>
+                    <Label Text="Stats" FontSize="12" TextColor="Gray"/>
                 </VerticalStackLayout>
 
-                <VerticalStackLayout Grid.Column="3" Spacing="4" HorizontalOptions="Center">
-                    <Label x:Name="ProfileIcon" Text="👤" FontSize="22"/>
-                    <Label x:Name="ProfileText" Text="Profile" FontSize="12" TextColor="Gray"/>
+                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
                     <VerticalStackLayout.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnProfileTapped"/>
                     </VerticalStackLayout.GestureRecognizers>
+                    <Label Text="👤" FontSize="22"/>
+                    <Label Text="Profile" FontSize="12" TextColor="Gray"/>
                 </VerticalStackLayout>
 
             </Grid>

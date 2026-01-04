@@ -1,11 +1,43 @@
-﻿namespace SectorMapQuest.Managers;
+﻿using Microsoft.Maui.Graphics;
+
+namespace SectorMapQuest.Managers;
 
 public class MapManager
 {
     //список всех секторов на карте
     public List<Sector> Sectors { get; } = new();
 
-    //генерирует гексагональную карту заданного радиуса
+    public float HexSize { get; } = 40f;
+
+    public Sector? GetSectorAtWorldPosition(PointF worldPosition)
+    {
+        foreach (var sector in Sectors)
+        {
+            var center = AxialToPixel(sector.Q, sector.R);
+
+            // Радиус "попадания" внутрь сектора
+            if (Distance(worldPosition, center) <= HexSize)
+                return sector;
+        }
+
+        return null;
+    }
+
+    private PointF AxialToPixel(int q, int r)
+    {
+        float x = HexSize * (float)(Math.Sqrt(3) * q + Math.Sqrt(3) / 2 * r);
+        float y = HexSize * (3f / 2f * r);
+        return new PointF(x, y);
+    }
+
+    private static float Distance(PointF a, PointF b)
+    {
+        var dx = a.X - b.X;
+        var dy = a.Y - b.Y;
+        return MathF.Sqrt(dx * dx + dy * dy);
+    }
+
+    //генерирует шестиугольную карту заданного радиуса
     public void Generate(int radius)
     {
         //очищаем предыдущую карту
@@ -18,7 +50,7 @@ public class MapManager
         {
             for (int r = -radius; r <= radius; r++)
             {
-                //фильтруем только те координаты, которые попадают в гексагональную область
+                //фильтруем только те координаты, которые попадают в шестиугольную область
                 if (Math.Abs(q + r) > radius)
                     continue;
 

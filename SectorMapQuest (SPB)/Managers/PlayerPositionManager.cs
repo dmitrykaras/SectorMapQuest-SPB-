@@ -2,14 +2,19 @@
 
 public class PlayerPositionManager
 {
-    public int Q { get; private set; }
-    public int R { get; private set; }
+    public PointF Position { get; private set; }
 
-    //перемещает игрока в указанные координаты
-    //в будущем можно добавить проверки на валидность координат....
-    public void MoveTo(int q, int r)
+    public event Action<PointF>? PositionChanged;
+
+    public PlayerPositionManager()
     {
-        Q = q;
-        R = r;
+        Position = new PointF(0, 0);
+    }
+
+    //перемещение игрока в указанные координаты
+    public void MoveTo(PointF newPosition)
+    {
+        Position = newPosition;
+        PositionChanged?.Invoke(Position);
     }
 }

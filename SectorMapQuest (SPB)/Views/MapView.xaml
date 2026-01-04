@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
-    x:Class="SectorMapQuest.Views.Map.MapView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="SectorMapQuest.Views.Map.MapView"
+    BackgroundColor="#121212">
+    
+    <Grid>
 
-    <GraphicsView
-        x:Name="MapCanvas"
-        BackgroundColor="Black" />
+        <!-- Основной холст карты -->
+        <GraphicsView
+            x:Name="MapCanvas"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"
+            BackgroundColor="#121212" />
 
+        <!-- Overlay: popup нового сектора -->
+        <Frame
+            x:Name="SectorPopup"
+            IsVisible="False"
+            BackgroundColor="#AA000000"
+            Padding="20"
+            CornerRadius="16"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+
+            <VerticalStackLayout Spacing="12">
+
+                <Label
+                    Text="Новый сектор открыт!"
+                    FontSize="20"
+                    TextColor="White"
+                    HorizontalOptions="Center"/>
+
+                <Button
+                    Text="Продолжить"
+                    Clicked="OnPopupClosed"/>
+
+            </VerticalStackLayout>
+        </Frame>
+
+    </Grid>
 </ContentView>

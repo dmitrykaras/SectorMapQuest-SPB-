@@ -1,8 +1,10 @@
-namespace SectorMapQuest__SPB_.Views;
+namespace SectorMapQuest.Views.Settings;
 
-public partial class SettingsPage : ContentPage
+public partial class SettingsView : ContentView
 {
-    public SettingsPage()
+    public event Action? BackRequested;
+
+    public SettingsView()
     {
         InitializeComponent();
     }

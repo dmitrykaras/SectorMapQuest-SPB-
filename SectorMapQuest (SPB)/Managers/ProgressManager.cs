@@ -16,20 +16,20 @@ public class ProgressManager
 
     //попытка открыть сектор в текущей позиции игрока
     public bool TryOpenSectorAtPlayerPosition(
-    PlayerPositionManager player,
-    MapManager map)
+        PlayerPositionManager player,
+        MapManager map)
     {
-        //получаем сектор по координатам игрока
-        var sector = map.GetAt(player.Q, player.R);
+        var sector = map.GetSectorAtWorldPosition(player.Position);
 
-        if (sector == null)
+        if (sector == null || sector.IsOpened)
             return false;
 
-        if (sector.IsOpened)
-            return false;
-
-        sector.IsOpened = true;
+        sector.Open();
+        SectorOpened?.Invoke(sector);
         return true;
     }
+
+    public event Action<Sector>? SectorOpened;
+
 
 }

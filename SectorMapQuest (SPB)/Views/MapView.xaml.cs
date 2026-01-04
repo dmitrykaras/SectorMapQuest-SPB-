@@ -5,12 +5,18 @@ namespace SectorMapQuest.Views.Map;
 
 public partial class MapView : ContentView
 {
+    //logic managers
     private readonly MapManager _mapManager;
     private readonly ProgressManager _progressManager;
     private readonly PlayerPositionManager _playerPosition;
 
+    //отрисовка
+    private readonly PlayerDrawable _playerDrawable;
     private readonly HexMapDrawable _drawable;
-    private bool _centered; // флаг, чтобы центрировать карту только один раз
+
+    //состояния
+    private bool _centered; // флаг: карта уже была центрирована
+    private bool _draggingPlayer; // флаг: сейчас перетаскиваем игрока
 
     public MapView(
         MapManager mapManager,
@@ -23,21 +29,30 @@ public partial class MapView : ContentView
         _progressManager = progressManager;
         _playerPosition = playerPosition;
 
+        //создаём drawable игрока
+        _playerDrawable = new PlayerDrawable(_playerPosition);
+
         //генерация карты радиусом 3 гекса от центра
         _mapManager.Generate(3);
 
         //создание и настройка отрисовщика карты
-        _drawable = new HexMapDrawable(_mapManager);
+        _drawable = new HexMapDrawable(_mapManager, _playerDrawable);
         MapCanvas.Drawable = _drawable;
 
         MapCanvas.SizeChanged += OnSizeChanged; //для центрирования карты
-        MapCanvas.StartInteraction += OnTouch; //для обработки касаний
+        //для обработки касаний
+        MapCanvas.StartInteraction += OnTouchStart;
+        MapCanvas.DragInteraction += OnTouchMove;
+        MapCanvas.EndInteraction += OnTouchEnd;
+
+        //подписка на событие открытия сектора
+        _progressManager.SectorOpened += OnSectorOpened;
     }
 
     //обработчик изменения размера холста
     private void OnSizeChanged(object? sender, EventArgs e)
     {
-        if (_centered || MapCanvas.Width <= 0)
+        if (_centered || MapCanvas.Width <= 0 || MapCanvas.Height <= 0)
             return;
 
         CenterMap();
@@ -62,6 +77,8 @@ public partial class MapView : ContentView
 
         //сбрасываем масштаб и вычисляем смещение для центрирования
         _drawable.Scale = 1f;
+
+        //вычисляем смещение, чтобы центр карты совпал с центром экрана
         _drawable.Offset = new PointF(
             screenCenter.X - mapCenter.X,
             screenCenter.Y - mapCenter.Y
@@ -72,10 +89,23 @@ public partial class MapView : ContentView
     }
 
     //обработчик касания карты
-    private void OnTouch(object sender, TouchEventArgs e)
+    private void OnTouchStart(object sender, TouchEventArgs e)
     {
-        //временная логкика...
-        _playerPosition.MoveTo(0, 0);
+        var worldPoint = ScreenToWorld(e.Touches[0]);
+
+        // проверяем, попали ли по игроку
+        if (Distance(worldPoint, _playerPosition.Position) < 15)
+            _draggingPlayer = true;
+    }
+
+    private void OnTouchMove(object sender, TouchEventArgs e)
+    {
+        if (!_draggingPlayer)
+            return;
+
+        var worldPoint = ScreenToWorld(e.Touches[0]);
+
+        _playerPosition.MoveTo(worldPoint);
 
         _progressManager.TryOpenSectorAtPlayerPosition(
             _playerPosition,
@@ -83,5 +113,40 @@ public partial class MapView : ContentView
         );
 
         MapCanvas.Invalidate();
+    }
+
+    private void OnTouchEnd(object sender, TouchEventArgs e)
+    {
+        _draggingPlayer = false;
+    }
+
+    private PointF ScreenToWorld(PointF screen)
+    {
+        return new PointF(
+            (screen.X - _drawable.Offset.X) / _drawable.Scale,
+            (screen.Y - _drawable.Offset.Y) / _drawable.Scale
+        );
+    }
+
+    private static float Distance(PointF a, PointF b)
+    {
+        var dx = a.X - b.X;
+        var dy = a.Y - b.Y;
+        return MathF.Sqrt(dx * dx + dy * dy);
+    }
+
+    //вызывается при открытии нового сектора.
+    private void OnSectorOpened(Sector sector)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            SectorPopup.IsVisible = true;
+        });
+    }
+
+    //закрывает overlay-окно "Новый сектор".
+    private void OnPopupClosed(object sender, EventArgs e)
+    {
+        SectorPopup.IsVisible = false;
     }
 }

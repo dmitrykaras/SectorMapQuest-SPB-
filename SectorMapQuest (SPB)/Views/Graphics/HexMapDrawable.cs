@@ -6,15 +6,17 @@ namespace SectorMapQuest.Graphics;
 public class HexMapDrawable : IDrawable
 {
     private readonly MapManager _mapManager;
+    private readonly PlayerDrawable _playerDrawable;
 
     //параметры для отрисовки шестиугольника карты
     public float HexSize { get; } = 40f; //размер шестиугольника (радиус описанной окружности)
     public float Scale { get; set; } = 1f; //масштам карты (в дальнейшем зум)
     public PointF Offset { get; set; } //смещение карты (в дальшнейшем перетаскивание)
 
-    public HexMapDrawable(MapManager mapManager)
+    public HexMapDrawable(MapManager mapManager, PlayerDrawable playerDrawable)
     {
         _mapManager = mapManager;
+        _playerDrawable = playerDrawable;
     }
 
     //метод отрисовки шестиугольников на карте
@@ -37,6 +39,9 @@ public class HexMapDrawable : IDrawable
             var center = AxialToPixel(sector.Q, sector.R);
             DrawHex(canvas, center, sector.IsOpened);
         }
+
+        //игрок поверх карты
+        _playerDrawable.Draw(canvas, dirtyRect);
 
         //восстанавливаем состояние холста
         canvas.RestoreState();

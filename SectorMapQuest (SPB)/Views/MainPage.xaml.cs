@@ -1,6 +1,5 @@
 ﻿using SectorMapQuest.Views.Map;
 using SectorMapQuest.Managers;
-using SectorMapQuest__SPB_.Views;
 using SectorMapQuest.Views.Settings;
 
 namespace SectorMapQuest.Views;
@@ -45,6 +44,7 @@ public partial class MainPage : ContentPage
         PageHost.Content = new Label { Text = "Profile", TextColor = Colors.White };
     }
 
+    //нажатие на кнопку настроек
     private void OnSettingsClicked(object sender, TappedEventArgs e)
     {
         var settings = new SettingsView();
@@ -52,10 +52,9 @@ public partial class MainPage : ContentPage
 
         PageHost.Content = settings;
 
-        BottomBar.IsVisible = false; // ⬅ скрываем нижнюю панель
+        BottomBar.IsVisible = false; //скрываем нижнюю панель
         BackButton.IsVisible = true;
     }
-
 
     //показывает карту в основном контейнере страницы
     private void ShowMap()
@@ -66,13 +65,13 @@ public partial class MainPage : ContentPage
             _playerPositionManager
         );
 
-        BottomBar.IsVisible = true; // ⬅ возвращаем нижнюю панель
+        BottomBar.IsVisible = true; //возвращаем нижнюю панель
     }
-
 
     //закрыть всплывающее окно
     private void OnPopupClosed(object sender, EventArgs e) { SectorPopup.IsVisible = false; }
 
+    //нажатие на стрелку назад
     private void OnBackClicked(object sender, TappedEventArgs e)
     {
         BackButton.IsVisible = false;

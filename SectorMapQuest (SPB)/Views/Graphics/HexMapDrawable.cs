@@ -1,5 +1,6 @@
 ﻿using Microsoft.Maui.Graphics;
 using SectorMapQuest.Managers;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace SectorMapQuest.Graphics;
 
@@ -7,16 +8,16 @@ public class HexMapDrawable : IDrawable
 {
     private readonly MapManager _mapManager;
     private readonly PlayerDrawable _playerDrawable;
+    private readonly CameraManager _camera;
 
     //параметры для отрисовки шестиугольника карты
     public float HexSize { get; } = 40f; //размер шестиугольника (радиус описанной окружности)
-    public float Scale { get; set; } = 1f; //масштам карты (в дальнейшем зум)
-    public PointF Offset { get; set; } //смещение карты (в дальшнейшем перетаскивание)
 
-    public HexMapDrawable(MapManager mapManager, PlayerDrawable playerDrawable)
+    public HexMapDrawable(MapManager mapManager, PlayerDrawable playerDrawable, CameraManager camera)
     {
         _mapManager = mapManager;
         _playerDrawable = playerDrawable;
+        _camera = camera;
     }
 
     //метод отрисовки шестиугольников на карте
@@ -30,8 +31,8 @@ public class HexMapDrawable : IDrawable
         canvas.SaveState();
 
         //применяем трансформации: смещение и масштаб
-        canvas.Translate(Offset.X, Offset.Y);
-        canvas.Scale(Scale, Scale);
+        canvas.Translate(_camera.Offset.X, _camera.Offset.Y);
+        canvas.Scale(_camera.Scale, _camera.Scale);
 
         //отрисовываем все секторы из менеджера карты
         foreach (var sector in _mapManager.Sectors)

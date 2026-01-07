@@ -1,5 +1,6 @@
 using SectorMapQuest.Graphics;
 using SectorMapQuest.Managers;
+using SectorMapQuest.Controller;
 
 namespace SectorMapQuest.Views.Map;
 
@@ -13,6 +14,10 @@ public partial class MapView : ContentView
     //отрисовка
     private readonly PlayerDrawable _playerDrawable;
     private readonly HexMapDrawable _drawable;
+
+    //камера и управление ей
+    private CameraManager _camera;
+    private MapCameraController _cameraController;
 
     //состояния
     private bool _centered; // флаг: карта уже была центрирована
@@ -35,8 +40,10 @@ public partial class MapView : ContentView
         //генерация карты радиусом 3 гекса от центра
         _mapManager.Generate(3);
 
+        _camera = new CameraManager();
+
         //создание и настройка отрисовщика карты
-        _drawable = new HexMapDrawable(_mapManager, _playerDrawable);
+        _drawable = new HexMapDrawable(_mapManager, _playerDrawable, _camera);
         MapCanvas.Drawable = _drawable;
 
         MapCanvas.SizeChanged += OnSizeChanged; //для центрирования карты
@@ -47,6 +54,18 @@ public partial class MapView : ContentView
 
         //подписка на событие открытия сектора
         _progressManager.SectorOpened += OnSectorOpened;
+
+        
+        _cameraController = new MapCameraController(() => MapCanvas.Invalidate(), _camera);
+
+        var pinch = new PinchGestureRecognizer();
+        pinch.PinchUpdated += (s, e) => _cameraController.OnPinchUpdated(e);
+
+        var pan = new PanGestureRecognizer();
+        pan.PanUpdated += (s, e) => _cameraController.OnPanUpdated(e);
+
+        MapCanvas.GestureRecognizers.Add(pinch);
+        MapCanvas.GestureRecognizers.Add(pan);
     }
 
     //обработчик изменения размера холста
@@ -75,15 +94,6 @@ public partial class MapView : ContentView
             bounds.X + bounds.Width / 2,
             bounds.Y + bounds.Height / 2);
 
-        //сбрасываем масштаб и вычисляем смещение для центрирования
-        _drawable.Scale = 1f;
-
-        //вычисляем смещение, чтобы центр карты совпал с центром экрана
-        _drawable.Offset = new PointF(
-            screenCenter.X - mapCenter.X,
-            screenCenter.Y - mapCenter.Y
-        );
-
         //запрашиваем перерисовку
         MapCanvas.Invalidate();
     }
@@ -91,21 +101,26 @@ public partial class MapView : ContentView
     //обработчик касания карты
     private void OnTouchStart(object sender, TouchEventArgs e)
     {
-        var worldPoint = ScreenToWorld(e.Touches[0]);
+        if (e.Touches.Length == 0)
+            return;
+
+        var screen = e.Touches[0];
+        var world = _camera.ScreenToWorld(screen);
 
         // проверяем, попали ли по игроку
-        if (Distance(worldPoint, _playerPosition.Position) < 15)
+        if (Distance(world, _playerPosition.Position) < 15)
             _draggingPlayer = true;
     }
 
+    //перетаскиывание player
     private void OnTouchMove(object sender, TouchEventArgs e)
     {
-        if (!_draggingPlayer)
+        if (!_draggingPlayer || e.Touches.Length == 0)
             return;
 
-        var worldPoint = ScreenToWorld(e.Touches[0]);
+        var world = _camera.ScreenToWorld(e.Touches[0]);
 
-        _playerPosition.MoveTo(worldPoint);
+        _playerPosition.MoveTo(world);
 
         _progressManager.TryOpenSectorAtPlayerPosition(
             _playerPosition,
@@ -115,19 +130,19 @@ public partial class MapView : ContentView
         MapCanvas.Invalidate();
     }
 
+    //заканчиваем перетаскивание
     private void OnTouchEnd(object sender, TouchEventArgs e)
     {
         _draggingPlayer = false;
     }
 
+    //перевод из экранных координат в мировые
     private PointF ScreenToWorld(PointF screen)
     {
-        return new PointF(
-            (screen.X - _drawable.Offset.X) / _drawable.Scale,
-            (screen.Y - _drawable.Offset.Y) / _drawable.Scale
-        );
+        return _camera.ScreenToWorld(screen);
     }
 
+    //расстояние между двумя точками
     private static float Distance(PointF a, PointF b)
     {
         var dx = a.X - b.X;

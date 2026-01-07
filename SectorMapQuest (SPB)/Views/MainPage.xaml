@@ -8,12 +8,12 @@
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <!-- ================= TOP BAR ================= -->
+        <!--Верхняя панель-->
         <Grid Grid.Row="0"
               Padding="16"
               ColumnDefinitions="Auto,*,Auto">
 
-            <!-- BACK (СДВИНУТА ВВЕРХ) -->
+            <!--Стрелка назад-->
             <Grid Margin="0,0,0,0">
                 <Label x:Name="BackButton"
                        Text="←"
@@ -26,7 +26,7 @@
                 </Label>
             </Grid>
 
-            <!-- TITLE -->
+            <!--Название-->
             <Label Grid.Column="1"
                    Text="SectorMapQuest"
                    FontSize="18"
@@ -34,7 +34,7 @@
                    VerticalOptions="Center"
                    HorizontalOptions="Center"/>
 
-            <!-- SETTINGS -->
+            <!--Настройки-->
             <Label Grid.Column="2"
                    Text="⚙"
                    FontSize="24"
@@ -47,13 +47,13 @@
 
         </Grid>
 
-        <!-- ================= CONTENT + POPUP ================= -->
+        <!--Content + всплывающее окно-->
         <Grid Grid.Row="1">
 
-            <!-- Контент страниц -->
+            <!--Контент страниц-->
             <ContentView x:Name="PageHost"/>
 
-            <!-- POPUP -->
+            <!--Всплывающее окно-->
             <Frame x:Name="SectorPopup"
                    IsVisible="False"
                    BackgroundColor="#AA000000"
@@ -76,7 +76,7 @@
 
         </Grid>
 
-        <!-- ================= BOTTOM BAR ================= -->
+        <!--Нижняя панель-->
         <Border Grid.Row="2"
                 x:Name="BottomBar"
                 BackgroundColor="#1F1F1F"

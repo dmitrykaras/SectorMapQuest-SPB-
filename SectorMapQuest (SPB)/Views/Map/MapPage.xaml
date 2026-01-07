@@ -7,14 +7,14 @@
     
     <Grid>
 
-        <!-- Основной холст карты -->
+        <!--Основной холст карты-->
         <GraphicsView
             x:Name="MapCanvas"
             HorizontalOptions="Fill"
             VerticalOptions="Fill"
             BackgroundColor="#121212" />
 
-        <!-- Overlay: popup нового сектора -->
+        <!--Вслывающее окно для новго сектора-->
         <Frame
             x:Name="SectorPopup"
             IsVisible="False"

@@ -39,5 +39,19 @@
             </VerticalStackLayout>
         </Frame>
 
+        <Button
+            x:Name="DebugModeButton"
+            Text="MODE: CAMERA"
+            WidthRequest="140"
+            HeightRequest="40"
+            BackgroundColor="#AA333333"
+            TextColor="White"
+            CornerRadius="8"
+            HorizontalOptions="End"
+            VerticalOptions="Start"
+            Margin="12"
+            Clicked="OnDebugModeClicked" />
+
+
     </Grid>
 </ContentView>

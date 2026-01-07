@@ -1,29 +1,53 @@
 ﻿public class CameraManager
 {
     //масштаб камеры (зум)
-    public float Scale { get; set; } = 1f;
+    public float Scale { get; private set; } = 1f;
+    public const float MinScale = 0.5f;
+    public const float MaxScale = 3.0f;
 
     //смещение камеры относительно мировых координат
     public PointF Offset { get; private set; } = new(0, 0);
 
+    //целевое смещение (для плавности)
+    public PointF TargetOffset { get; private set; }
+
+    //обновление Offset'а 
+    public void Update(float smoothing = 0.25f)
+    {
+        Offset = new PointF(
+            Offset.X + (TargetOffset.X - Offset.X) * smoothing,
+            Offset.Y + (TargetOffset.Y - Offset.Y) * smoothing
+        );
+    }
+
+    public CameraManager()
+    {
+        Offset = new PointF(0, 0);
+        TargetOffset = Offset; // ⬅️ ВОТ ЭТО МЕСТО
+    }
+
     //установка скейла для отдаления камеры
     public void SetScale(float scale)
     {
-        Scale = scale;
+        Scale = Math.Clamp(scale, MinScale, MaxScale);
     }
 
     //устанавливаем новое смещение
-    public void SetOffset(float x, float y)
+    public void SetOffset(PointF offset)
     {
-        Offset = new PointF(x, y);
+        Offset = offset;
     }
 
 
     //перемещение (свдиг) камеры по осям
     public void Translate(float dx, float dy)
     {
-        Offset = new PointF(Offset.X + dx, Offset.Y + dy);
+        TargetOffset = new PointF(
+            TargetOffset.X + dx,
+            TargetOffset.Y + dy
+        );
     }
+
 
     //центрирует камеру на указанной точке в мировых координатах
     public void CenterOn(PointF worldPoint, SizeF viewport)
@@ -48,7 +72,7 @@
     public PointF ScreenToWorld(PointF screen)
     {
         return new PointF(
-            (screen.X - Offset.X) / Scale, //убираем смещение и делим на масштаб
+            (screen.X - Offset.X) / Scale,
             (screen.Y - Offset.Y) / Scale
         );
     }

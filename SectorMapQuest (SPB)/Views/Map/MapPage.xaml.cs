@@ -4,12 +4,24 @@ using SectorMapQuest.Controller;
 
 namespace SectorMapQuest.Views.Map;
 
+public enum MapInputMode
+{
+    Camera,   // pan + pinch двигают карту
+    Player    // касание двигает игрока
+}
+
+
 public partial class MapView : ContentView
 {
     //logic managers
     private readonly MapManager _mapManager;
     private readonly ProgressManager _progressManager;
     private readonly PlayerPositionManager _playerPosition;
+
+    private MapInputMode _inputMode = MapInputMode.Camera; // по умолчанию карта
+
+    private PanGestureRecognizer _panGesture;
+    private PinchGestureRecognizer _pinchGesture;
 
     //отрисовка
     private readonly PlayerDrawable _playerDrawable;
@@ -58,15 +70,31 @@ public partial class MapView : ContentView
         
         _cameraController = new MapCameraController(() => MapCanvas.Invalidate(), _camera);
 
-        var pinch = new PinchGestureRecognizer();
-        pinch.PinchUpdated += (s, e) => _cameraController.OnPinchUpdated(e);
+        _panGesture = new PanGestureRecognizer();
+        _panGesture.PanUpdated += OnPanUpdated;
 
-        var pan = new PanGestureRecognizer();
-        pan.PanUpdated += (s, e) => _cameraController.OnPanUpdated(e);
+        _pinchGesture = new PinchGestureRecognizer();
+        _pinchGesture.PinchUpdated += OnPinchUpdated;
 
-        MapCanvas.GestureRecognizers.Add(pinch);
-        MapCanvas.GestureRecognizers.Add(pan);
+        // Изначально включаем только потому, что стартовый режим CAMERA
+        MapCanvas.GestureRecognizers.Add(_panGesture);
+        MapCanvas.GestureRecognizers.Add(_pinchGesture);
     }
+
+    //отладка: если режим камеры, то перетаскивание работает
+    private void OnPanUpdated(object sender, PanUpdatedEventArgs e)
+    {
+        if (_inputMode == MapInputMode.Camera)
+            _cameraController.OnPanUpdated(e);
+    }
+
+    //отладка: если режим камера, то масштабирование работает
+    private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+    {
+        if (_inputMode == MapInputMode.Camera)
+            _cameraController.OnPinchUpdated(e);
+    }
+
 
     //обработчик изменения размера холста
     private void OnSizeChanged(object? sender, EventArgs e)
@@ -101,13 +129,13 @@ public partial class MapView : ContentView
     //обработчик касания карты
     private void OnTouchStart(object sender, TouchEventArgs e)
     {
-        if (e.Touches.Length == 0)
+        if (_inputMode != MapInputMode.Player || e.Touches.Length == 0)
             return;
 
         var screen = e.Touches[0];
         var world = _camera.ScreenToWorld(screen);
 
-        // проверяем, попали ли по игроку
+        //проверяем, попали ли по игроку
         if (Distance(world, _playerPosition.Position) < 15)
             _draggingPlayer = true;
     }
@@ -115,7 +143,7 @@ public partial class MapView : ContentView
     //перетаскиывание player
     private void OnTouchMove(object sender, TouchEventArgs e)
     {
-        if (!_draggingPlayer || e.Touches.Length == 0)
+        if (_inputMode != MapInputMode.Player || !_draggingPlayer || e.Touches.Length == 0)
             return;
 
         var world = _camera.ScreenToWorld(e.Touches[0]);
@@ -164,4 +192,30 @@ public partial class MapView : ContentView
     {
         SectorPopup.IsVisible = false;
     }
+
+    //обработчик для кнопки дебага
+    private void OnDebugModeClicked(object sender, EventArgs e)
+    {
+        _inputMode = _inputMode == MapInputMode.Camera
+            ? MapInputMode.Player
+            : MapInputMode.Camera;
+
+        //сначала убираем любые жесты
+        MapCanvas.GestureRecognizers.Remove(_panGesture);
+        MapCanvas.GestureRecognizers.Remove(_pinchGesture);
+
+        //если теперь режим Camera — добавляем их обратно
+        if (_inputMode == MapInputMode.Camera)
+        {
+            MapCanvas.GestureRecognizers.Add(_panGesture);
+            MapCanvas.GestureRecognizers.Add(_pinchGesture);
+        }
+
+        DebugModeButton.Text = _inputMode == MapInputMode.Camera
+            ? "MODE: CAMERA"
+            : "MODE: PLAYER";
+    }
+
+
+
 }

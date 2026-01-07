@@ -4,6 +4,12 @@ public class MapCameraController
 {
     public bool IsDraggingPlayer { get; private set; }
 
+    //переменные для pan
+    private double _lastPanX;
+    private double _lastPanY;
+
+    //переменная для pinch
+    private double _lastPinchScale = 1.0;
 
     //карта к которой применяется трансформация и камера хранящая текущее состояние параметров смещения
     private readonly Action _invalidate;
@@ -30,40 +36,42 @@ public class MapCameraController
         //начало жеста — запоминаем исходное состояние камеры
         if (e.Status == GestureStatus.Started)
         {
-            _startScale = _camera.Scale;
-            _startOffset = _camera.Offset;
+            _lastPinchScale = 1.0;
+            return;
         }
 
         //во время жеста вычисляем новый масштаб
-        if (e.Status == GestureStatus.Running)
-        {
-            var newScale = Math.Clamp(
-                _startScale * (float)e.Scale,
-                MinScale,
-                MaxScale
-            );
+        if (e.Status != GestureStatus.Running)
+            return;
 
-            _camera.SetScale(newScale);
-            _invalidate();
-        }
+        var delta = e.Scale / _lastPinchScale;
+        _lastPinchScale = e.Scale;
+
+        _camera.SetScale((float)delta);
+        _invalidate();
     }
 
     //обработка жеста "pan" (перетаскивание одним пальцем)
     public void OnPanUpdated(PanUpdatedEventArgs e)
     {
         if (e.StatusType == GestureStatus.Started)
-            _startOffset = _camera.Offset;
+        {
+            _lastPanX = e.TotalX;
+            _lastPanY = e.TotalY;
+            return;
+        }
 
-        //реакция только во время движения пальца
         if (e.StatusType == GestureStatus.Running)
         {
-            //сдвигаем камеру на величину смещения жеста
-            _camera.Translate(
-                (float)e.TotalX,
-                (float)e.TotalY
-            );
+            var dx = e.TotalX - _lastPanX;
+            var dy = e.TotalY - _lastPanY;
 
+            _lastPanX = e.TotalX;
+            _lastPanY = e.TotalY;
+
+            _camera.Translate((float)dx, (float)dy);
             _invalidate();
         }
     }
+
 }

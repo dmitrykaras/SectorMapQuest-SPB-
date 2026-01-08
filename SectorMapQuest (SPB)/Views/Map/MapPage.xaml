@@ -4,8 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="SectorMapQuest.Views.Map.MapView"
     BackgroundColor="#121212">
-    
-    <Grid>
+    <Border
+        StrokeThickness="0"
+        BackgroundColor="#121212">
+        
+        <Grid>
 
         <!--Основной холст карты-->
         <GraphicsView
@@ -53,5 +56,6 @@
             Clicked="OnDebugModeClicked" />
 
 
-    </Grid>
+        </Grid>
+    </Border>
 </ContentView>

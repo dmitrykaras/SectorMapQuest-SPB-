@@ -51,7 +51,11 @@
         <Grid Grid.Row="1">
 
             <!--Контент страниц-->
-            <ContentView x:Name="PageHost"/>
+            <ContentView x:Name="PageHost"
+                Padding="0"
+                Margin="0"
+                VerticalOptions="Fill"
+                HorizontalOptions="Fill"/>
 
             <!--Всплывающее окно-->
             <Frame x:Name="SectorPopup"

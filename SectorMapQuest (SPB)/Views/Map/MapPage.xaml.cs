@@ -32,7 +32,6 @@ public partial class MapView : ContentView
     private MapCameraController _cameraController;
 
     //состояния
-    private bool _centered; // флаг: карта уже была центрирована
     private bool _draggingPlayer; // флаг: сейчас перетаскиваем игрока
 
     public MapView(
@@ -46,19 +45,13 @@ public partial class MapView : ContentView
         _progressManager = progressManager;
         _playerPosition = playerPosition;
 
-        //создаём drawable игрока
-        _playerDrawable = new PlayerDrawable(_playerPosition);
-
         //генерация карты радиусом 3 гекса от центра
         _mapManager.Generate(3);
 
         _camera = new CameraManager();
 
-        //создание и настройка отрисовщика карты
-        _drawable = new HexMapDrawable(_mapManager, _playerDrawable, _camera);
-        MapCanvas.Drawable = _drawable;
+        _camera = _mapManager.Camera;
 
-        MapCanvas.SizeChanged += OnSizeChanged; //для центрирования карты
         //для обработки касаний
         MapCanvas.StartInteraction += OnTouchStart;
         MapCanvas.DragInteraction += OnTouchMove;
@@ -67,14 +60,42 @@ public partial class MapView : ContentView
         //подписка на событие открытия сектора
         _progressManager.SectorOpened += OnSectorOpened;
 
-        
         _cameraController = new MapCameraController(() => MapCanvas.Invalidate(), _camera);
+
+        //запускаем CenterOn в самом запуске приложения чтобы player был по центру
+        MapCanvas.SizeChanged += (s, e) =>
+        {
+            if (MapCanvas.Width > 0 && MapCanvas.Height > 0)
+            {
+                _camera.CenterOn(_playerPosition.Position, MapCanvas.Width, MapCanvas.Height);
+
+                // Чтобы при старте не было "доезда", а сразу стояло на месте:
+                _camera.SetOffset(_camera.TargetOffset);
+                MapCanvas.Invalidate();
+            }
+        };
 
         _panGesture = new PanGestureRecognizer();
         _panGesture.PanUpdated += OnPanUpdated;
 
         _pinchGesture = new PinchGestureRecognizer();
         _pinchGesture.PinchUpdated += OnPinchUpdated;
+
+        //центрирование на player 
+        _mapManager.Camera.RequestInvalidate += () => {
+            MainThread.BeginInvokeOnMainThread(() => {
+                MapCanvas.Invalidate();
+            });
+        };
+
+        _camera.RequestInvalidate += () => MainThread.BeginInvokeOnMainThread(() => MapCanvas.Invalidate());
+
+        //создаём drawable игрока
+        _playerDrawable = new PlayerDrawable(_playerPosition);
+
+        //создание и настройка отрисовщика карты
+        _drawable = new HexMapDrawable(_mapManager, _playerDrawable, _camera);
+        MapCanvas.Drawable = _drawable;
 
         // Изначально включаем только потому, что стартовый режим CAMERA
         MapCanvas.GestureRecognizers.Add(_panGesture);
@@ -93,37 +114,6 @@ public partial class MapView : ContentView
     {
         if (_inputMode == MapInputMode.Camera)
             _cameraController.OnPinchUpdated(e);
-    }
-
-
-    //обработчик изменения размера холста
-    private void OnSizeChanged(object? sender, EventArgs e)
-    {
-        if (_centered || MapCanvas.Width <= 0 || MapCanvas.Height <= 0)
-            return;
-
-        CenterMap();
-        _centered = true;
-    }
-
-    //центрирует карту на экране
-    private void CenterMap()
-    {
-        //получаем границы карты в пикселях
-        var bounds = _mapManager.GetWorldBounds(_drawable.HexSize);
-
-        //центр экрана
-        var screenCenter = new PointF(
-            (float)(MapCanvas.Width / 2),
-            (float)(MapCanvas.Height / 2));
-
-        //центр карты в мировых координатах
-        var mapCenter = new PointF(
-            bounds.X + bounds.Width / 2,
-            bounds.Y + bounds.Height / 2);
-
-        //запрашиваем перерисовку
-        MapCanvas.Invalidate();
     }
 
     //обработчик касания карты

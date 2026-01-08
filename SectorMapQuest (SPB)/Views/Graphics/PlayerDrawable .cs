@@ -14,7 +14,7 @@ public class PlayerDrawable : IDrawable
         _player = player;
     }
 
-    //рисует player на карте
+    //рисуем player 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         var p = _player.Position;

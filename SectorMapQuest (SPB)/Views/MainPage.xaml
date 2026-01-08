@@ -57,6 +57,19 @@
                 VerticalOptions="Fill"
                 HorizontalOptions="Fill"/>
 
+            <!--Кнопка центрирования игрока-->
+            <Button Text="🎯"
+                FontSize="24"
+                HeightRequest="60"
+                WidthRequest="60"
+                CornerRadius="30"
+                BackgroundColor="#33FFFFFF"
+                TextColor="White"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="20"
+                Clicked="OnCenterOnPlayerClicked" />
+
             <!--Всплывающее окно-->
             <Frame x:Name="SectorPopup"
                    IsVisible="False"

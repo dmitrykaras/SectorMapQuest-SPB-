@@ -23,7 +23,7 @@ public class HexMapDrawable : IDrawable
     //метод отрисовки шестиугольников на карте
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
-        _camera.Update();
+        _camera.Update(0.15f); //плавность
 
         //очитска фона
         canvas.FillColor = Colors.Black;

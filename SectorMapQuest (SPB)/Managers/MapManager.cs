@@ -7,6 +7,8 @@ public class MapManager
     //список всех секторов на карте
     public List<Sector> Sectors { get; } = new();
 
+    public CameraManager Camera { get; } = new CameraManager();
+
     public float HexSize { get; } = 40f;
 
     public Sector? GetSectorAtWorldPosition(PointF worldPosition)

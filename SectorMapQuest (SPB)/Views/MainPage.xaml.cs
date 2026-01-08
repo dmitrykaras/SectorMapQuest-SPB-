@@ -78,4 +78,14 @@ public partial class MainPage : ContentPage
         BottomBar.IsVisible = true;
         ShowMap();
     }
+
+    //обработчик нажатия
+    private void OnCenterOnPlayerClicked(object sender, EventArgs e)
+    {
+        if (PageHost.Content is MapView mapView)
+        {
+            var pos = _playerPositionManager.Position;
+            _mapManager.Camera.CenterOn(pos, PageHost.Width, PageHost.Height);
+        }
+    }
 }

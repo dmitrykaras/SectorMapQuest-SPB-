@@ -1,5 +1,8 @@
 ﻿public class CameraManager
 {
+    //перерисовка для центрирования
+    public event Action RequestInvalidate;
+
     //масштаб камеры (зум)
     public float Scale { get; private set; } = 1f;
     public const float MinScale = 0.5f;
@@ -11,13 +14,27 @@
     //целевое смещение (для плавности)
     public PointF TargetOffset { get; private set; }
 
-    //обновление Offset'а 
+    //плавная анимация перемещения
     public void Update(float smoothing = 0.25f)
     {
-        Offset = new PointF(
-            Offset.X + (TargetOffset.X - Offset.X) * smoothing,
-            Offset.Y + (TargetOffset.Y - Offset.Y) * smoothing
-        );
+        float dx = TargetOffset.X - Offset.X;
+        float dy = TargetOffset.Y - Offset.Y;
+
+        // Если разница больше пикселя, продолжаем движение
+        if (Math.Abs(dx) > 0.5f || Math.Abs(dy) > 0.5f)
+        {
+            Offset = new PointF(
+                Offset.X + dx * smoothing,
+                Offset.Y + dy * smoothing
+            );
+
+            RequestInvalidate?.Invoke();
+        }
+        else
+        {
+            // Принудительно ставим в финальную точку для идеальной точности
+            Offset = TargetOffset;
+        }
     }
 
     public CameraManager()
@@ -48,17 +65,6 @@
         );
     }
 
-
-    //центрирует камеру на указанной точке в мировых координатах
-    public void CenterOn(PointF worldPoint, SizeF viewport)
-    {
-        //вычисляем смещение так, чтобы worldPoint оказался в центре viewport
-        Offset = new PointF(
-            viewport.Width / 2f - worldPoint.X * Scale, //по X
-            viewport.Height / 2f - worldPoint.Y * Scale //по Y
-        );
-    }
-
     //преобразует мировые координаты в экранные
     public PointF WorldToScreen(PointF world)
     {
@@ -75,5 +81,18 @@
             (screen.X - Offset.X) / Scale,
             (screen.Y - Offset.Y) / Scale
         );
+    }
+
+    //рассчитываем смещение так, чтобы точка игрока оказалась в центре экрана
+    public void CenterOn(PointF worldPosition, double screenWidth, double screenHeight)
+    {
+        // Расчет строгого центра: Offset = Экран/2 - (Мир * Зум)
+        float targetX = (float)(screenWidth / 2f - (worldPosition.X * Scale));
+        float targetY = (float)(screenHeight / 2f - (worldPosition.Y * Scale));
+
+        TargetOffset = new PointF(targetX, targetY);
+
+        // Даем первый толчок для начала цикла Invalidate
+        RequestInvalidate?.Invoke();
     }
 }
